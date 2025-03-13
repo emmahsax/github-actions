@@ -44,8 +44,11 @@ jobs:
           ruby-version: '3'
           bundler-cache: false
 
-      - name: Install HTML Proofer
-        run: gem install html-proofer
+      - name: Create Gemfile and Install HTML Proofer
+        run: |
+          echo "source 'https://rubygems.org'" > Gemfile
+          echo "gem 'html-proofer'" >> Gemfile
+          bundle install
 
       - name: HTML Proofer
         run: |

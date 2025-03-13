@@ -6,7 +6,7 @@ on:
         required: true
         type: string
       caller_job_name:
-        default: html-proofer
+        default: markdown-linter
         description: The name of the job that calls this one
         required: false
         type: string
@@ -14,14 +14,14 @@ on:
         description: The file or command to run
         required: true
         type: string
-      html_proofer_version:
-        default: '5.0'
-        description: The HTML Proofer version to use
-        required: false
-        type: string
       hugo_version:
         default: '0.145.0'
         description: The Hugo version to use
+        required: false
+        type: string
+      mdl_versino:
+        default: '0.13'
+        description: The HTML Proofer version to use
         required: false
         type: string
       notify_pr:
@@ -59,22 +59,22 @@ jobs:
           ruby-version: ${{ inputs.ruby_version }}
           bundler-cache: false
 
-      - name: Create Gemfile and Install HTML Proofer
+      - name: Create Gemfile and Install MDL
         run: |
           echo "source 'https://rubygems.org'" > Gemfile
-          echo "gem 'html-proofer', '~> ${{ inputs.html_proofer_version }}'" >> Gemfile
+          echo "gem 'mdl', '~> ${{ inputs.mdl_version }}'" >> Gemfile
           bundle install
 
-      - name: HTML Proofer
+      - name: Markdown Linter
         run: |
           if ${{ inputs.notify_pr }}; then
-            if ${{ inputs.command }}; then
+            if ${{ inputs.linter_command }}; then
               echo "status=success" >> $GITHUB_ENV
             else
               echo "status=fail" >> $GITHUB_ENV
             fi
           else
-            ${{ inputs.command }}
+            ${{ inputs.linter_command }}
           fi
 
       - id: job_log_url
@@ -89,14 +89,14 @@ jobs:
         name: Pull Request Failure Comment
         uses: thollander/actions-comment-pull-request@v3
         with:
-          comment-tag: html-proofer
+          comment-tag: markdown-linter
           message: |
-            :warning: Latest run of Jekyll Site HTML Proofer **failed**: ${{ steps.job_log_url.outputs.html_url }}
+            :warning: Latest run of Markdown Linter **failed**: ${{ steps.job_log_url.outputs.html_url }}
 
       - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.status == 'success'
         name: Pull Request Success Comment
         uses: thollander/actions-comment-pull-request@v3
         with:
-          comment-tag: html-proofer
+          comment-tag: markdown-linter
           message: |
-            :white_check_mark: Latest run of Jekyll Site HTML Proofer **succeeded**: ${{ steps.job_log_url.outputs.html_url }}
+            :white_check_mark: Latest run of Markdown Linter **succeeded**: ${{ steps.job_log_url.outputs.html_url }}

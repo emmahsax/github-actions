@@ -5,6 +5,11 @@ on:
         description: The branch to check out
         required: true
         type: string
+      hugo_version:
+        default: '0.145.0'
+        description: The Hugo version to use
+        required: false
+        type: string
 
 jobs:
   main:
@@ -18,7 +23,7 @@ jobs:
       - name: Install Hugo
         uses: peaceiris/actions-hugo@v3
         with:
-          hugo-version: '0.145.0'
+          hugo-version: ${{ inputs.hugo_version }}
           extended: true
 
       - name: Hugo Build

@@ -48,22 +48,22 @@ jobs:
         with:
           ref: ${{ inputs.branch }}
 
-      - name: Setup Ruby
-        if: inputs.install_required
+      - if: ${{ inputs.install_required }}
+        name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ inputs.ruby_version }}
           bundler-cache: false
 
-      - name: Create Gemfile and Install MDL
-        if: inputs.install_required
+      - if: ${{ inputs.install_required }}
+        name: Create Gemfile and Install MDL
         run: |
           echo "source 'https://rubygems.org'" > Gemfile
           echo "gem 'mdl', '~> ${{ inputs.mdl_version }}'" >> Gemfile
           bundle install
 
-      - name: Install Ruby and Bundle Install
-        if: "!inputs.install_required"
+      - if: ${{ inputs.install_required == false }}
+        name: Install Ruby and Bundle Install
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true

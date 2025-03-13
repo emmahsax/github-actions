@@ -22,4 +22,4 @@ jobs:
           extended: true
 
       - name: Hugo Build
-        run: hugo
+        run: HUGO_ENV=production hugo

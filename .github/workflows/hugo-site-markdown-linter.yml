@@ -19,7 +19,7 @@ on:
         description: The Hugo version to use
         required: false
         type: string
-      mdl_versino:
+      mdl_version:
         default: '0.13'
         description: The HTML Proofer version to use
         required: false

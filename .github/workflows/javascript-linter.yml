@@ -5,12 +5,16 @@ on:
         description: The branch to check out
         required: true
         type: string
+      command:
+        description: The file or command to run
+        required: false # TODO: switch to true
+        type: string
       linter_command:
         description: The file or command to run
-        required: true
+        required: false
         type: string
       node_version:
-        default: 20
+        default: 22
         description: The Node version to use
         required: false
         type: number
@@ -31,4 +35,4 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: Javascript Linter
-        run: npm install standard --save-dev && ${{ inputs.linter_command }}
+        run: npm install standard --save-dev && ${{ inputs.linter_command || inputs.command }}

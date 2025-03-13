@@ -10,13 +10,32 @@ on:
         description: The name of the job that calls this one
         required: false
         type: string
+      command:
+        description: The file or command to run
+        required: false # TODO: switch to true
+        type: string
+      install_required:
+        default: false
+        description: Whether to install the dependencies
+        required: false
+        type: boolean
       linter_command:
         description: The file or command to run
-        required: true
+        required: false
+        type: string
+      mdl_version:
+        default: '0.13'
+        description: The HTML Proofer version to use
+        required: false
         type: string
       notify_pr:
         default: false
         description: Whether to notify the PR about failures/success runs
+        required: false
+        type: string
+      ruby_version:
+        default: '3'
+        description: The Ruby version to use
         required: false
         type: string
 
@@ -29,7 +48,22 @@ jobs:
         with:
           ref: ${{ inputs.branch }}
 
-      - name: Install Ruby and Bundle Install
+      - if: ${{ inputs.install_required }}
+        name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ inputs.ruby_version }}
+          bundler-cache: false
+
+      - if: ${{ inputs.install_required }}
+        name: Create Gemfile and Install MDL
+        run: |
+          echo "source 'https://rubygems.org'" > Gemfile
+          echo "gem 'mdl', '~> ${{ inputs.mdl_version }}'" >> Gemfile
+          bundle install
+
+      - if: ${{ inputs.install_required == false }}
+        name: Install Ruby and Bundle Install
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
@@ -37,13 +71,13 @@ jobs:
       - name: Markdown Linter
         run: |
           if ${{ inputs.notify_pr }}; then
-            if ${{ inputs.linter_command }}; then
+            if ${{ inputs.linter_command || inputs.command }}; then
               echo "status=success" >> $GITHUB_ENV
             else
               echo "status=fail" >> $GITHUB_ENV
             fi
           else
-            ${{ inputs.linter_command }}
+            ${{ inputs.linter_command || inputs.command }}
           fi
 
       - id: job_log_url

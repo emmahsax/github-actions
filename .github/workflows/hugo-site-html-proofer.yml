@@ -14,9 +14,24 @@ on:
         description: The file or command to run
         required: true
         type: string
+      html_proofer_version:
+        default: '5.0'
+        description: The HTML Proofer version to use
+        required: false
+        type: string
+      hugo_version:
+        default: '0.145.0'
+        description: The Hugo version to use
+        required: false
+        type: string
       notify_pr:
         default: false
         description: Whether to notify the PR about failures/success runs
+        required: false
+        type: string
+      ruby_version:
+        default: '3'
+        description: The Ruby version to use
         required: false
         type: string
 
@@ -29,13 +44,26 @@ jobs:
         with:
           ref: ${{ inputs.branch }}
 
-      - name: Install Ruby and Bundle Install
+      - name: Install Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: ${{ inputs.hugo_version }}
+          extended: true
+
+      - name: Hugo Build
+        run: HUGO_ENV=production hugo
+
+      - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          bundler-cache: true
+          ruby-version: ${{ inputs.ruby_version }}
+          bundler-cache: false
 
-      - name: Jekyll Build
-        run: JEKYLL_ENV=production bundle exec jekyll build --destination _site
+      - name: Create Gemfile and Install HTML Proofer
+        run: |
+          echo "source 'https://rubygems.org'" > Gemfile
+          echo "gem 'html-proofer', '~> ${{ inputs.html_proofer_version }}'" >> Gemfile
+          bundle install
 
       - name: HTML Proofer
         run: |
@@ -63,7 +91,7 @@ jobs:
         with:
           comment-tag: html-proofer
           message: |
-            :warning: Latest run of Jekyll Site HTML Proofer **failed**: ${{ steps.job_log_url.outputs.html_url }}
+            :warning: Latest run of Hugo Site HTML Proofer **failed**: ${{ steps.job_log_url.outputs.html_url }}
 
       - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.status == 'success'
         name: Pull Request Success Comment
@@ -71,4 +99,4 @@ jobs:
         with:
           comment-tag: html-proofer
           message: |
-            :white_check_mark: Latest run of Jekyll Site HTML Proofer **succeeded**: ${{ steps.job_log_url.outputs.html_url }}
+            :white_check_mark: Latest run of Hugo Site HTML Proofer **succeeded**: ${{ steps.job_log_url.outputs.html_url }}

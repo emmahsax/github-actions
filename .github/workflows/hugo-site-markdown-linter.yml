@@ -68,13 +68,13 @@ jobs:
       - name: Markdown Linter
         run: |
           if ${{ inputs.notify_pr }}; then
-            if ${{ inputs.linter_command }}; then
+            if ${{ inputs.command }}; then
               echo "status=success" >> $GITHUB_ENV
             else
               echo "status=fail" >> $GITHUB_ENV
             fi
           else
-            ${{ inputs.linter_command }}
+            ${{ inputs.command }}
           fi
 
       - id: job_log_url

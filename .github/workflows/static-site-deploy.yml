@@ -3,7 +3,7 @@ on:
     inputs:
       move_static_files:
         default: true
-        description: Whether to move the source_folder/source_static_folder/* to source_folder/*
+        description: Whether to move the source_static_folder/* to source_folder/*
         required: false
         type: boolean
       source_folder:

@@ -1,9 +1,9 @@
 on:
   workflow_call:
     inputs:
-      move_site_files:
+      move_static_files:
         default: true
-        description: Whether to move the source_folder/source_site_files_folder/* to source_folder/*
+        description: Whether to move the source_folder/source_static_folder/* to source_folder/*
         required: false
         type: boolean
       source_folder:
@@ -11,9 +11,9 @@ on:
         description: The folder to deploy from with a / at the end
         required: false
         type: string
-      source_site_files_folder:
-        default: site_files/
-        description: The location of the site files with a / at the end
+      source_static_folder:
+        default: site_files/ # TODO: Change to static/
+        description: The location of the static files with a / at the end
         required: false
         type: string
       target_branch:
@@ -45,7 +45,7 @@ jobs:
           fetch-depth: 2147483647
           ref: main
 
-      - name: Install Ruby and Bundle Install
+      - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
@@ -53,12 +53,11 @@ jobs:
       - name: Jekyll Build
         run: JEKYLL_ENV=production bundle exec jekyll build --destination ${{ inputs.source_folder }}
 
-      - if: ${{ inputs.move_site_files }}
-        name: Move Site Files
-        uses: emmahsax/github-actions/move-up-nested-files@main
-        with:
-          dir: ${{ inputs.source_folder }}
-          nested_dir: ${{ inputs.source_site_files_folder }}
+      - if: ${{ inputs.move_static_files }}
+        name: Move Static Files
+        run: |
+          rsync -a --remove-source-files ${{ inputs.source_static_folder }} ${{ inputs.source_folder }}
+          rm -r ${{ inputs.source_folder }}${{ inputs.source_static_folder }} || echo 0
 
       - if: ${{ inputs.target_external_repository }}
         name: Deploy Site to External Repository

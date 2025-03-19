@@ -49,23 +49,15 @@ jobs:
           ref: ${{ inputs.branch }}
 
       - if: ${{ inputs.install_required }}
-        name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ inputs.ruby_version }}
-          bundler-cache: false
-
-      - if: ${{ inputs.install_required }}
         name: Create Gemfile and Install MDL
         run: |
           echo "source 'https://rubygems.org'" > Gemfile
           echo "gem 'mdl', '~> ${{ inputs.mdl_version }}'" >> Gemfile
-          bundle install
 
-      - if: ${{ inputs.install_required == false }}
-        name: Install Ruby and Bundle Install
+      - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
+          ruby-version: ${{ inputs.install_required && inputs.ruby_version || '' }}
           bundler-cache: true
 
       - name: Markdown Linter

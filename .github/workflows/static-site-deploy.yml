@@ -1,19 +1,19 @@
 on:
   workflow_call:
     inputs:
-      move_site_files:
+      move_static_files:
         default: true
-        description: Whether to move the source_folder/source_site_files_folder/* to source_folder/*
+        description: Whether to move the source_folder/source_static_folder/* to source_folder/*
         required: false
         type: boolean
       source_folder:
-        default: _site/
+        default: public/
         description: The folder to deploy from with a / at the end
         required: false
         type: string
-      source_site_files_folder:
-        default: site_files/
-        description: The location of the site files with a / at the end
+      source_static_folder:
+        default: static/
+        description: The location of the static files with a / at the end
         required: false
         type: string
       target_branch:
@@ -45,15 +45,15 @@ jobs:
           fetch-depth: 2147483647
           ref: main
 
-      - name: Create Site Manually
+      - name: Create Source Folder
         run: mkdir ${{ inputs.source_folder }}
 
-      - if: ${{ inputs.move_site_files }}
-        name: Move Site Files
+      - if: ${{ inputs.move_static_files }}
+        name: Move Static Files
         uses: emmahsax/github-actions/move-up-nested-files@main
         with:
           dir: ${{ inputs.source_folder }}
-          nested_dir: ${{ inputs.source_site_files_folder }}
+          nested_dir: ${{ inputs.source_static_folder }}
 
       - if: ${{ inputs.target_external_repository }}
         name: Deploy Site to External Repository

@@ -23,7 +23,8 @@ jobs:
       - name: Jekyll Build
         run: JEKYLL_ENV=production bundle exec jekyll build --destination _site/
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
         with:
           name: public
           path: _site/

@@ -54,7 +54,7 @@ jobs:
           echo "source 'https://rubygems.org'" > Gemfile
           echo "gem 'mdl', '~> ${{ inputs.mdl_version }}'" >> Gemfile
 
-      - name: Setup Ruby
+      - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ inputs.install_required && inputs.ruby_version || '' }}

@@ -60,13 +60,14 @@ jobs:
           echo "source 'https://rubygems.org'" > Gemfile
           echo "gem 'html-proofer', '~> ${{ inputs.html_proofer_version }}'" >> Gemfile
 
-      - name: Setup Ruby
+      - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ inputs.install_required && inputs.ruby_version || '' }}
           bundler-cache: true
 
-      - uses: actions/download-artifact@v4
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.site_artifact_name }}
           path: ${{ inputs.site_artifact_path }}

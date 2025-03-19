@@ -11,17 +11,17 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Set up Go
+    - name: Install Go
       uses: actions/setup-go@v5
       with:
         go-version: ${{ inputs.go_version }}
 
-    - name: Setup private access
+    - name: Configure private access
       shell: bash
       run: git config --global url.https://${{ inputs.github_token }}@github.com/.insteadOf https://github.com/
 
-    - name: Setup Task
+    - name: Install Task
       uses: arduino/setup-task@v1
 
-    - name: Setup Ko
+    - name: Install Ko
       uses: ko-build/setup-ko@v0.8

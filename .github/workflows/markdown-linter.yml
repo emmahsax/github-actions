@@ -12,17 +12,13 @@ on:
         type: string
       command:
         description: The file or command to run
-        required: false # TODO: switch to true
+        required: true
         type: string
       install_required:
-        default: false # TODO: switch to true
+        default: true
         description: Whether to install the dependencies
         required: false
         type: boolean
-      linter_command: # TODO: remove this input
-        description: The file or command to run
-        required: false
-        type: string
       mdl_version:
         default: '0.13'
         description: The HTML Proofer version to use
@@ -63,13 +59,13 @@ jobs:
       - name: Markdown Linter
         run: |
           if ${{ inputs.notify_pr }}; then
-            if ${{ inputs.linter_command || inputs.command }}; then
+            if ${{ inputs.command }}; then
               echo "status=success" >> $GITHUB_ENV
             else
               echo "status=fail" >> $GITHUB_ENV
             fi
           else
-            ${{ inputs.linter_command || inputs.command }}
+            ${{ inputs.command }}
           fi
 
       - id: job_log_url

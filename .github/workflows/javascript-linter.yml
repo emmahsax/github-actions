@@ -7,11 +7,7 @@ on:
         type: string
       command:
         description: The file or command to run
-        required: false # TODO: switch to true
-        type: string
-      linter_command:
-        description: The file or command to run
-        required: false
+        required: true
         type: string
       node_version:
         default: 22
@@ -35,4 +31,4 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: Javascript Linter
-        run: npm install standard --save-dev && ${{ inputs.linter_command || inputs.command }}
+        run: npm install standard --save-dev && ${{ inputs.command }}

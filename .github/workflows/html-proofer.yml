@@ -35,8 +35,13 @@ on:
         required: false
         type: string
       site_artifact_name:
-        default: site-build
+        default: public
         description: The name of the artifact to download
+        required: false
+        type: string
+      site_artifact_path:
+        default: public/
+        description: The path to the artifact to download
         required: false
         type: string
 
@@ -64,7 +69,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.site_artifact_name }}
-          path: public/
+          path: ${{ inputs.site_artifact_path }}
 
       - name: HTML Proofer
         run: |

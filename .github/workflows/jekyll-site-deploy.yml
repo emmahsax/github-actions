@@ -1,6 +1,11 @@
 on:
   workflow_call:
     inputs:
+      branch:
+        default: main
+        description: The branch to check out
+        required: false
+        type: string
       move_static_files:
         default: true
         description: Whether to move the source_folder/source_static_folder/* to source_folder/*
@@ -43,7 +48,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 2147483647
-          ref: main
+          ref: ${{ inputs.branch }}
 
       - name: Install Ruby
         uses: ruby/setup-ruby@v1

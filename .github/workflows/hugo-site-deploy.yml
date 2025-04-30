@@ -1,14 +1,19 @@
 on:
   workflow_call:
     inputs:
-      branch:
-        default: main
-        description: The branch to check out
+      hugo_extended:
+        default: false
+        description: Whether or not to installed the extended version of Hugo
         required: false
-        type: string
+        type: boolean
       hugo_version:
         default: '0.145.0'
         description: The Hugo version to use
+        required: false
+        type: string
+      source_branch:
+        default: main
+        description: The branch to check out
         required: false
         type: string
       target_branch:
@@ -38,13 +43,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 2147483647
-          ref: ${{ inputs.branch }}
+          ref: ${{ inputs.source_branch }}
 
       - name: Install Hugo
         uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: ${{ inputs.hugo_version }}
-          extended: true
+          extended: ${{ inputs.hugo_extended }}
 
       - name: Hugo Build
         run: HUGO_ENV=production hugo

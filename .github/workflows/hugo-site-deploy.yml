@@ -48,8 +48,8 @@ jobs:
       - name: Install Hugo
         uses: peaceiris/actions-hugo@v3
         with:
-          hugo-version: ${{ inputs.hugo_version }}
           extended: ${{ inputs.hugo_extended }}
+          hugo-version: ${{ inputs.hugo_version }}
 
       - name: Hugo Build
         run: HUGO_ENV=production hugo

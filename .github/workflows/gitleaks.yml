@@ -17,7 +17,7 @@ on:
         required: false
         type: string
       gitleaks_version:
-        default: v8.23.3
+        default: v8.28.0
         description: The version of GitLeaks to run
         required: false
         type: string
@@ -45,11 +45,17 @@ jobs:
           curl -H "Accept: application/vnd.github.v3.raw" \
             -L "https://api.github.com/repos/zricethezav/gitleaks/contents/config/gitleaks.toml?ref=${{ inputs.gitleaks_version }}" \
             >> ${{ github.workspace }}/original.toml
+
           sed "/\[allowlist\]/,/^$/d" ${{ github.workspace }}/original.toml >> ${{ github.workspace }}/gitleaks.toml
-          echo "[allowlist]" >> ${{ github.workspace }}/gitleaks.toml
-          echo "commits = ${{ inputs.gitleaks_config_commits }}" >> ${{ github.workspace }}/gitleaks.toml
-          echo "paths = ${{ inputs.gitleaks_config_paths }}" >> ${{ github.workspace }}/gitleaks.toml
-          echo "regexes = ${{ inputs.gitleaks_config_regexes }}" >> ${{ github.workspace }}/gitleaks.toml
+
+          if [ "${{ inputs.gitleaks_config_commits }}" != "[]" ] || \
+             [ "${{ inputs.gitleaks_config_paths }}" != "[]" ] || \
+             [ "${{ inputs.gitleaks_config_regexes }}" != "[]" ]; then
+            echo "[allowlist]" >> ${{ github.workspace }}/gitleaks.toml
+            echo "commits = ${{ inputs.gitleaks_config_commits }}" >> ${{ github.workspace }}/gitleaks.toml
+            echo "paths = ${{ inputs.gitleaks_config_paths }}" >> ${{ github.workspace }}/gitleaks.toml
+            echo "regexes = ${{ inputs.gitleaks_config_regexes }}" >> ${{ github.workspace }}/gitleaks.toml
+          fi
 
       - name: Determine GitLeaks Command
         run: |

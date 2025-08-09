@@ -48,7 +48,9 @@ jobs:
           sed "/\[allowlist\]/,/^$/d" ${{ github.workspace }}/original.toml >> ${{ github.workspace }}/gitleaks.toml
           echo "[[allowlist]]" >> ${{ github.workspace }}/gitleaks.toml
           echo "commits = ${{ inputs.gitleaks_config_commits }}" >> ${{ github.workspace }}/gitleaks.toml
+          echo "[[allowlist]]" >> ${{ github.workspace }}/gitleaks.toml
           echo "paths = ${{ inputs.gitleaks_config_paths }}" >> ${{ github.workspace }}/gitleaks.toml
+          echo "[[allowlist]]" >> ${{ github.workspace }}/gitleaks.toml
           echo "regexes = ${{ inputs.gitleaks_config_regexes }}" >> ${{ github.workspace }}/gitleaks.toml
 
       - name: Determine GitLeaks Command

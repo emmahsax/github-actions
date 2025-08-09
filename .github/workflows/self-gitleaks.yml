@@ -9,3 +9,7 @@ on:
 jobs:
   gitleaks:
     uses: ./.github/workflows/gitleaks.yml
+    with:
+      gitleaks_config_commits: "[
+        '60f25347a957cf76fc2298502f1f70f6b015b4d6',
+      ]"

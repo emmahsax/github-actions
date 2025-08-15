@@ -1,0 +1,76 @@
+name: Version Bump Check
+
+on:
+  workflow_call:
+    inputs:
+      description:
+        default: version update
+        description: The description for the pull request comment
+        required: false
+        type: string
+      file:
+        description: The file to check for the version bump
+        required: true
+        type: string
+      regex:
+        description: The regex to check for the version bump
+        required: true
+        type: string
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: -1
+
+      - id: changes
+        name: Check for Changes
+        run: |
+          changed_file="$(git diff ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} ${{ inputs.file }})"
+
+          if [ -z "$changed_file" ]; then
+            echo "no_changes=true" >> $GITHUB_OUTPUT
+          else
+            added_match=$(echo "$changed_file" | grep -E '^\+${{ inputs.regex }}' || true)
+            removed_match=$(echo "$changed_file" | grep -E '^\-${{ inputs.regex }}' || true)
+
+            if [[ -z "$added_match" ]] && [[ -z "$removed_match" ]]; then
+              echo "no_changes=true" >> $GITHUB_OUTPUT
+            fi
+
+            if [[ -n "$added_match" ]]; then
+              echo "added_match=$added_match" >> $GITHUB_OUTPUT
+            else
+              echo "added_match=" >> $GITHUB_OUTPUT
+            fi
+
+            if [[ -n "$removed_match" ]]; then
+              echo "removed_match=$removed_match" >> $GITHUB_OUTPUT
+            else
+              echo "removed_match=" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - if: ${{ steps.changes.outputs.no_changes != 'true' }}
+        name: Found Change Comment
+        uses: thollander/actions-comment-pull-request@v3
+        with:
+          comment-tag: changes
+          message: |
+            :white_check_mark: Found ${{ inputs.description }} in `${{ inputs.file }}`:
+
+            ```diff
+            ${{ steps.changes.outputs.removed_match }}
+            ${{ steps.changes.outputs.added_match }}
+            ```
+
+      - if: ${{ steps.changes.outputs.no_changes == 'true' }}
+        name: Missing Change Comment
+        uses: thollander/actions-comment-pull-request@v3
+        with:
+          comment-tag: changes
+          message: |
+            :warning: Could not find ${{ inputs.description }} in `${{ inputs.file }}`

@@ -57,7 +57,7 @@ jobs:
           ${{ inputs.config_file }}
           EOF
 
-      - continue-on-error: ${{ inputs.notify_pr }}
+      - continue-on-error: ${{ inputs.notify_pr == 'true' }}
         id: htmltest
         name: Run HTML Test
         uses: wjdp/htmltest-action@31be84a95c860a331e0cf9a99f71e3eb39d2f86b

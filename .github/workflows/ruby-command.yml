@@ -15,19 +15,9 @@ on:
         required: false
         type: string
       command:
-        description: The file or command to run
+        description: The command to run
         required: true
         type: string
-      gemfile_input:
-        default: ''
-        description: The line to add to the Gemfile to properly install required gems
-        required: false
-        type: string
-      install_required:
-        default: false
-        description: Whether to install the dependencies
-        required: false
-        type: boolean
       notify_pr:
         default: false
         description: Whether to notify the PR about failures/success runs
@@ -58,16 +48,10 @@ jobs:
         with:
           ref: ${{ inputs.branch }}
 
-      - if: ${{ inputs.install_required && inputs.gemfile_input }}
-        name: Create Gemfile
-        run: |
-          echo "source 'https://rubygems.org'" > Gemfile
-          echo "${{ inputs.gemfile_input }}" >> Gemfile
-
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ inputs.install_required && inputs.ruby_version || '' }}
+          ruby-version: ${{ inputs.ruby_version }}
           bundler-cache: true
 
       - if: ${{ inputs.site_artifact_name && inputs.site_artifact_path }}

@@ -1,0 +1,91 @@
+on:
+  workflow_call:
+    inputs:
+      branch:
+        description: The branch to check out
+        required: true
+        type: string
+      caller_job_name:
+        default: ''
+        description: The name of the job that calls this one
+        required: false
+        type: string
+      caller_prettified_job_name:
+        default: ''
+        description: The prettified name of the job for PR comments (falls back to caller_job_name if not provided)
+        required: false
+        type: string
+      config_file:
+        description: The config file content to use
+        required: false
+        type: string
+      notify_pr:
+        default: false
+        description: Whether to notify the PR about failures/success runs
+        required: false
+        type: string
+      site_artifact_name:
+        default: ''
+        description: The name of the artifact to download
+        required: false
+        type: string
+      site_artifact_path:
+        default: ''
+        description: The path to the artifact to download
+        required: false
+        type: string
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Code
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.branch }}
+
+      - if: ${{ inputs.site_artifact_name && inputs.site_artifact_path }}
+        name: Download Artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: ${{ inputs.site_artifact_name }}
+          path: ${{ inputs.site_artifact_path }}
+
+      - if: ${{ inputs.config_file }}
+        name: Create Config
+        run: |
+          cat > .htmltest.yml << 'EOF'
+          ${{ inputs.config_file }}
+          EOF
+
+      - continue-on-error: ${{ inputs.notify_pr == 'true' }}
+        id: htmltest
+        name: Run HTML Test
+        uses: wjdp/htmltest-action@31be84a95c860a331e0cf9a99f71e3eb39d2f86b
+        with:
+          path: ${{ inputs.site_artifact_path }}
+          config: ${{ inputs.config_file && '.htmltest.yml' || '' }}
+
+      - id: job_log_url
+        if: github.event_name == 'pull_request' && inputs.notify_pr == 'true'
+        name: Get Job Log URL
+        uses: Tiryoh/gha-jobid-action@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          job_name: ${{ inputs.caller_job_name }} / ${{ github.job }}
+
+      - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && steps.htmltest.outcome == 'failure'
+        name: Pull Request Failure Comment
+        uses: thollander/actions-comment-pull-request@v3
+        with:
+          comment-tag: ${{ inputs.caller_job_name }}
+          message: |
+            :warning: Latest run of ${{ inputs.caller_prettified_job_name || inputs.caller_job_name }} **failed**: ${{ steps.job_log_url.outputs.html_url }}
+
+      - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && steps.htmltest.outcome == 'success'
+        name: Pull Request Success Comment
+        uses: thollander/actions-comment-pull-request@v3
+        with:
+          comment-tag: ${{ inputs.caller_job_name }}
+          message: |
+            :white_check_mark: Latest run of ${{ inputs.caller_prettified_job_name || inputs.caller_job_name }} **succeeded**: ${{ steps.job_log_url.outputs.html_url }}

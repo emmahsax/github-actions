@@ -31,6 +31,9 @@ jobs:
           extended: ${{ inputs.hugo_extended }}
           hugo-version: ${{ inputs.hugo_version }}
 
+      - name: Validate Hugo Configuration
+        run: hugo config
+
       - name: Hugo Build
         run: HUGO_ENV=production hugo
 

@@ -6,41 +6,36 @@ on:
         required: true
         type: string
       caller_job_name:
-        default: html-proofer
+        default: ''
         description: The name of the job that calls this one
         required: false
         type: string
+      caller_prettified_job_name:
+        default: ''
+        description: The prettified name of the job for PR comments (falls back to caller_job_name if not provided)
+        required: false
+        type: string
       command:
-        description: The file or command to run
+        description: The command to run
         required: true
         type: string
-      html_proofer_version:
-        default: '5.0'
-        description: The HTML Proofer version to use
+      node_version:
+        default: '22'
+        description: The Node version to use
         required: false
         type: string
-      install_required:
-        default: true
-        description: Whether to install the dependencies
-        required: false
-        type: boolean
       notify_pr:
         default: false
         description: Whether to notify the PR about failures/success runs
         required: false
         type: string
-      ruby_version:
-        default: '3'
-        description: The Ruby version to use
-        required: false
-        type: string
       site_artifact_name:
-        default: public
+        default: ''
         description: The name of the artifact to download
         required: false
         type: string
       site_artifact_path:
-        default: public/
+        default: ''
         description: The path to the artifact to download
         required: false
         type: string
@@ -54,34 +49,34 @@ jobs:
         with:
           ref: ${{ inputs.branch }}
 
-      - if: ${{ inputs.install_required }}
-        name: Create Gemfile
-        run: |
-          echo "source 'https://rubygems.org'" > Gemfile
-          echo "gem 'html-proofer', '~> ${{ inputs.html_proofer_version }}'" >> Gemfile
-
-      - name: Install Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Install Node
+        uses: actions/setup-node@v4
         with:
-          ruby-version: ${{ inputs.install_required && inputs.ruby_version || '' }}
-          bundler-cache: true
+          node-version: ${{ inputs.node_version }}
+          registry-url: https://registry.npmjs.org
 
-      - name: Download Artifact
+      - if: ${{ inputs.site_artifact_name && inputs.site_artifact_path }}
+        name: Download Artifact
         uses: actions/download-artifact@v5
         with:
           name: ${{ inputs.site_artifact_name }}
           path: ${{ inputs.site_artifact_path }}
 
-      - name: HTML Proofer
+      - name: Run Command
         run: |
+          set +e
+          ${{ inputs.command }}
+          EXIT_CODE=$?
+          set -e
+
           if ${{ inputs.notify_pr }}; then
-            if ${{ inputs.command }}; then
+            if [ $EXIT_CODE -eq 0 ]; then
               echo "status=success" >> $GITHUB_ENV
             else
               echo "status=fail" >> $GITHUB_ENV
             fi
           else
-            ${{ inputs.command }}
+            exit $EXIT_CODE
           fi
 
       - id: job_log_url
@@ -96,14 +91,14 @@ jobs:
         name: Pull Request Failure Comment
         uses: thollander/actions-comment-pull-request@v3
         with:
-          comment-tag: html-proofer
+          comment-tag: ${{ inputs.caller_job_name }}
           message: |
-            :warning: Latest run of Hugo Site HTML Proofer **failed**: ${{ steps.job_log_url.outputs.html_url }}
+            :warning: Latest run of ${{ inputs.caller_prettified_job_name || inputs.caller_job_name }} **failed**: ${{ steps.job_log_url.outputs.html_url }}
 
       - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.status == 'success'
         name: Pull Request Success Comment
         uses: thollander/actions-comment-pull-request@v3
         with:
-          comment-tag: html-proofer
+          comment-tag: ${{ inputs.caller_job_name }}
           message: |
-            :white_check_mark: Latest run of Hugo Site HTML Proofer **succeeded**: ${{ steps.job_log_url.outputs.html_url }}
+            :white_check_mark: Latest run of ${{ inputs.caller_prettified_job_name || inputs.caller_job_name }} **succeeded**: ${{ steps.job_log_url.outputs.html_url }}

@@ -24,12 +24,12 @@ on:
         required: false
         type: string
       site_artifact_name:
-        default: public
+        default: ''
         description: The name of the artifact to download
         required: false
         type: string
       site_artifact_path:
-        default: public/
+        default: ''
         description: The path to the artifact to download
         required: false
         type: string

@@ -53,7 +53,7 @@ jobs:
         with:
           ref: ${{ inputs.branch }}
 
-      - if: ${{ inputs.install_required }}
+      - if: ${{ inputs.install_required && inputs.gemfile_input }}
         name: Create Gemfile
         run: |
           echo "source 'https://rubygems.org'" > Gemfile

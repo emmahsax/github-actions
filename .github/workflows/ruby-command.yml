@@ -72,16 +72,21 @@ jobs:
           name: ${{ inputs.site_artifact_name }}
           path: ${{ inputs.site_artifact_path }}
 
-      - name: Command
+      - name: Run Command
         run: |
+          set +e
+          ${{ inputs.command }}
+          EXIT_CODE=$?
+          set -e
+
           if ${{ inputs.notify_pr }}; then
-            if ${{ inputs.command }}; then
+            if [ $EXIT_CODE -eq 0 ]; then
               echo "status=success" >> $GITHUB_ENV
             else
               echo "status=fail" >> $GITHUB_ENV
             fi
           else
-            ${{ inputs.command }}
+            exit $EXIT_CODE
           fi
 
       - id: job_log_url

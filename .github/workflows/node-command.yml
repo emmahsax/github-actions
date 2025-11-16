@@ -14,10 +14,10 @@ on:
         required: true
         type: string
       node_version:
-        default: 22
+        default: '22'
         description: The Node version to use
         required: false
-        type: number
+        type: string
       notify_pr:
         default: false
         description: Whether to notify the PR about failures/success runs

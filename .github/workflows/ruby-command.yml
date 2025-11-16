@@ -6,6 +6,7 @@ on:
         required: true
         type: string
       caller_job_name:
+        default: ''
         description: The name of the job that calls this one
         required: false
         type: string

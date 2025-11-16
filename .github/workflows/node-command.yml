@@ -9,6 +9,11 @@ on:
         description: The name of the job that calls this one
         required: true
         type: string
+      caller_prettified_job_name:
+        default: ''
+        description: The prettified name of the job for PR comments (falls back to caller_job_name if not provided)
+        required: false
+        type: string
       command:
         description: The command to run
         required: true
@@ -87,7 +92,7 @@ jobs:
         with:
           comment-tag: ${{ inputs.caller_job_name }}
           message: |
-            :warning: Latest run of ${{ inputs.caller_job_name }} **failed**: ${{ steps.job_log_url.outputs.html_url }}
+            :warning: Latest run of ${{ inputs.caller_prettified_job_name || inputs.caller_job_name }} **failed**: ${{ steps.job_log_url.outputs.html_url }}
 
       - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.status == 'success'
         name: Pull Request Success Comment
@@ -95,4 +100,4 @@ jobs:
         with:
           comment-tag: ${{ inputs.caller_job_name }}
           message: |
-            :white_check_mark: Latest run of ${{ inputs.caller_job_name }} **succeeded**: ${{ steps.job_log_url.outputs.html_url }}
+            :white_check_mark: Latest run of ${{ inputs.caller_prettified_job_name || inputs.caller_job_name }} **succeeded**: ${{ steps.job_log_url.outputs.html_url }}

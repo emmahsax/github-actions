@@ -89,7 +89,7 @@ jobs:
 
       - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.status == 'fail'
         name: Pull Request Failure Comment
-        uses: emmahsax/github-actions/comment-pull-request@add-comment
+        uses: emmahsax/github-actions/comment-pull-request@main
         with:
           comment_tag: ${{ inputs.caller_job_name }}
           message: |
@@ -97,7 +97,7 @@ jobs:
 
       - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.status == 'success'
         name: Pull Request Success Comment
-        uses: emmahsax/github-actions/comment-pull-request@add-comment
+        uses: emmahsax/github-actions/comment-pull-request@main
         with:
           comment_tag: ${{ inputs.caller_job_name }}
           message: |

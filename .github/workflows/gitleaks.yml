@@ -17,7 +17,7 @@ on:
         required: false
         type: string
       gitleaks_version:
-        default: v8.28.0
+        default: v8.30.1
         description: The version of GitLeaks to run
         required: false
         type: string
@@ -42,11 +42,11 @@ jobs:
 
       - name: Set GitLeaks Config File
         run: |
-          curl -H "Accept: application/vnd.github.v3.raw" \
-            -L "https://api.github.com/repos/zricethezav/gitleaks/contents/config/gitleaks.toml?ref=${{ inputs.gitleaks_version }}" \
-            >> ${{ github.workspace }}/original.toml
+          touch ${{ github.workspace }}/gitleaks.toml
 
-          sed "/\[allowlist\]/,/^$/d" ${{ github.workspace }}/original.toml >> ${{ github.workspace }}/gitleaks.toml
+          echo "title = \"PII Scanner\"" >> ${{ github.workspace }}/gitleaks.toml
+          echo "[extend]" >> ${{ github.workspace }}/gitleaks.toml
+          echo "useDefault = true" >> ${{ github.workspace }}/gitleaks.toml
 
           if [ "${{ inputs.gitleaks_config_commits }}" != "[]" ] || \
              [ "${{ inputs.gitleaks_config_paths }}" != "[]" ] || \

@@ -89,16 +89,16 @@ jobs:
 
       - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.status == 'fail'
         name: Pull Request Failure Comment
-        uses: thollander/actions-comment-pull-request@v3
+        uses: emmahsax/github-actions/comment-pull-request@add-comment
         with:
-          comment-tag: ${{ inputs.caller_job_name }}
+          comment_tag: ${{ inputs.caller_job_name }}
           message: |
             :warning: Latest run of ${{ inputs.caller_prettified_job_name || inputs.caller_job_name }} **failed**: ${{ steps.job_log_url.outputs.html_url }}
 
       - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.status == 'success'
         name: Pull Request Success Comment
-        uses: thollander/actions-comment-pull-request@v3
+        uses: emmahsax/github-actions/comment-pull-request@add-comment
         with:
-          comment-tag: ${{ inputs.caller_job_name }}
+          comment_tag: ${{ inputs.caller_job_name }}
           message: |
             :white_check_mark: Latest run of ${{ inputs.caller_prettified_job_name || inputs.caller_job_name }} **succeeded**: ${{ steps.job_log_url.outputs.html_url }}

@@ -17,8 +17,8 @@ on:
         required: false
         type: string
       gitleaks_version:
-        default: v8.30.1
-        description: The version of GitLeaks to run
+        default: v8.30.0
+        description: The version of GitLeaks to run (should exist in https://hub.docker.com/r/zricethezav/gitleaks/tags)
         required: false
         type: string
       run_default_on_all_commits:

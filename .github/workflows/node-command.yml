@@ -57,7 +57,7 @@ jobs:
 
       - if: ${{ inputs.site_artifact_name && inputs.site_artifact_path }}
         name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: ${{ inputs.site_artifact_name }}
           path: ${{ inputs.site_artifact_path }}

@@ -44,7 +44,7 @@ jobs:
         run: |
           touch ${{ github.workspace }}/gitleaks.toml
 
-          echo "title = \"PII Scanner\"" >> ${{ github.workspace }}/gitleaks.toml
+          echo "title = \"GitLeaks Scanner\"" >> ${{ github.workspace }}/gitleaks.toml
           echo "[extend]" >> ${{ github.workspace }}/gitleaks.toml
           echo "useDefault = true" >> ${{ github.workspace }}/gitleaks.toml
 

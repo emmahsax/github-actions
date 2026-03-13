@@ -17,8 +17,8 @@ on:
         required: false
         type: string
       gitleaks_version:
-        default: v8.28.0
-        description: The version of GitLeaks to run
+        default: v8.30.0
+        description: The version of GitLeaks to run (should exist in https://hub.docker.com/r/zricethezav/gitleaks/tags)
         required: false
         type: string
       run_default_on_all_commits:
@@ -42,11 +42,11 @@ jobs:
 
       - name: Set GitLeaks Config File
         run: |
-          curl -H "Accept: application/vnd.github.v3.raw" \
-            -L "https://api.github.com/repos/zricethezav/gitleaks/contents/config/gitleaks.toml?ref=${{ inputs.gitleaks_version }}" \
-            >> ${{ github.workspace }}/original.toml
+          touch ${{ github.workspace }}/gitleaks.toml
 
-          sed "/\[allowlist\]/,/^$/d" ${{ github.workspace }}/original.toml >> ${{ github.workspace }}/gitleaks.toml
+          echo "title = \"GitLeaks Scanner\"" >> ${{ github.workspace }}/gitleaks.toml
+          echo "[extend]" >> ${{ github.workspace }}/gitleaks.toml
+          echo "useDefault = true" >> ${{ github.workspace }}/gitleaks.toml
 
           if [ "${{ inputs.gitleaks_config_commits }}" != "[]" ] || \
              [ "${{ inputs.gitleaks_config_paths }}" != "[]" ] || \

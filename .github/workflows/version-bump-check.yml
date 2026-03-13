@@ -56,9 +56,9 @@ jobs:
 
       - if: ${{ steps.changes.outputs.no_changes != 'true' }}
         name: Found Change Comment
-        uses: thollander/actions-comment-pull-request@v3
+        uses: emmahsax/github-actions/comment-pull-request@add-comment
         with:
-          comment-tag: changes
+          comment_tag: changes
           message: |
             :white_check_mark: Found ${{ inputs.description }} in `${{ inputs.file }}`:
 
@@ -69,8 +69,8 @@ jobs:
 
       - if: ${{ steps.changes.outputs.no_changes == 'true' }}
         name: Missing Change Comment
-        uses: thollander/actions-comment-pull-request@v3
+        uses: emmahsax/github-actions/comment-pull-request@add-comment
         with:
-          comment-tag: changes
+          comment_tag: changes
           message: |
             :warning: Could not find ${{ inputs.description }} in `${{ inputs.file }}`

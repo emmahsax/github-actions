@@ -46,7 +46,7 @@ runs:
   steps:
     - name: Post or update PR comment
       id: comment
-      uses: actions/github-script@v8
+      uses: actions/github-script@v9
       env:
         INPUT_COMMENT_TAG: ${{ inputs.comment_tag }}
         INPUT_CREATE_IF_NOT_EXISTS: ${{ inputs.create_if_not_exists }}

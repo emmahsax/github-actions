@@ -61,7 +61,7 @@ jobs:
       - continue-on-error: ${{ inputs.notify_pr == 'true' }}
         id: htmltest
         name: Run HTML Test
-        uses: emmahsax/github-actions/run-htmltest@main
+        uses: emmahsax/github-actions/run-htmltest@update
         with:
           path: ${{ inputs.site_artifact_path }}
           config: ${{ inputs.config_file && '.htmltest.yml' || '' }}
@@ -69,14 +69,14 @@ jobs:
       - id: job_log_url
         if: github.event_name == 'pull_request' && inputs.notify_pr == 'true'
         name: Get Job Log URL
-        uses: emmahsax/github-actions/get-job-id@main
+        uses: emmahsax/github-actions/get-job-id@update
         with:
           github_token: ${{ secrets.github_token }}
           job_name: ${{ inputs.caller_job_name }} / ${{ github.job }}
 
       - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && steps.htmltest.outcome == 'failure'
         name: Pull Request Failure Comment
-        uses: emmahsax/github-actions/comment-pull-request@main
+        uses: emmahsax/github-actions/comment-pull-request@update
         with:
           comment_tag: ${{ inputs.caller_job_name }}
           message: |
@@ -84,7 +84,7 @@ jobs:
 
       - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && steps.htmltest.outcome == 'success'
         name: Pull Request Success Comment
-        uses: emmahsax/github-actions/comment-pull-request@main
+        uses: emmahsax/github-actions/comment-pull-request@update
         with:
           comment_tag: ${{ inputs.caller_job_name }}
           message: |

@@ -26,7 +26,7 @@ jobs:
           ref: ${{ inputs.branch }}
 
       - name: Install Hugo
-        uses: emmahsax/github-actions/setup-hugo-ubuntu@main
+        uses: emmahsax/github-actions/setup-hugo-ubuntu@update
         with:
           extended: ${{ inputs.hugo_extended }}
           hugo_version: ${{ inputs.hugo_version }}

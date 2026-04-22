@@ -53,7 +53,7 @@ jobs:
         run: ${{ inputs.vet_command }}
 
       - name: Go FMT
-        uses: emmahsax/github-actions/gofmt-check@main
+        uses: emmahsax/github-actions/gofmt-check@update
         with:
           gofmt_flags: '-l -d'
           gofmt_path: ./

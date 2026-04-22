@@ -1,0 +1,27 @@
+name: Go FMT Check
+description: Check Go code formatting using gofmt
+
+inputs:
+  gofmt_flags:
+    default: '-l -d'
+    description: Flags to pass to gofmt
+    required: false
+  gofmt_path:
+    default: './'
+    description: Path for gofmt to check
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Check Go Formatting
+      shell: bash
+      env:
+        GOFMT_FLAGS: ${{ inputs.gofmt_flags }}
+        GOFMT_PATH: ${{ inputs.gofmt_path }}
+      run: |
+        output=$(gofmt $GOFMT_FLAGS $GOFMT_PATH)
+        if [ -n "$output" ]; then
+          echo "$output"
+          exit 1
+        fi

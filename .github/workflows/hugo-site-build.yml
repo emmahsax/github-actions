@@ -26,10 +26,10 @@ jobs:
           ref: ${{ inputs.branch }}
 
       - name: Install Hugo
-        uses: peaceiris/actions-hugo@v3
+        uses: emmahsax/github-actions/setup-hugo-ubuntu@main
         with:
           extended: ${{ inputs.hugo_extended }}
-          hugo-version: ${{ inputs.hugo_version }}
+          hugo_version: ${{ inputs.hugo_version }}
 
       - name: Validate Hugo Configuration
         run: hugo config

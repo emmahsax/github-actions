@@ -46,10 +46,10 @@ jobs:
           ref: ${{ inputs.source_branch }}
 
       - name: Install Hugo
-        uses: peaceiris/actions-hugo@v3
+        uses: emmahsax/github-actions/setup-hugo-ubuntu@main
         with:
           extended: ${{ inputs.hugo_extended }}
-          hugo-version: ${{ inputs.hugo_version }}
+          hugo_version: ${{ inputs.hugo_version }}
 
       - name: Hugo Build
         run: HUGO_ENV=production hugo

@@ -1,0 +1,44 @@
+name: Run htmltest
+description: Install and run htmltest to validate HTML links and references
+
+inputs:
+  config:
+    default: ''
+    description: Path to the htmltest config file (e.g. .htmltest.yml); uses htmltest defaults if not provided
+    required: false
+  path:
+    default: './'
+    description: Path to the directory of HTML files to test
+    required: false
+  version:
+    default: ''
+    description: Version of htmltest to install (e.g. 0.17.0); defaults to latest release
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Install htmltest
+      shell: bash
+      env:
+        HTMLTEST_VERSION: ${{ inputs.version }}
+      run: |
+        if [ -z "$HTMLTEST_VERSION" ]; then
+          HTMLTEST_VERSION=$(curl -sSL "https://api.github.com/repos/wjdp/htmltest/releases/latest" \
+            | python3 -c "import sys,json; print(json.load(sys.stdin)['tag_name'].lstrip('v'))")
+        fi
+        curl -sSL "https://github.com/wjdp/htmltest/releases/download/v${HTMLTEST_VERSION}/htmltest_${HTMLTEST_VERSION}_linux_amd64.tar.gz" \
+          | sudo tar -xz -C /usr/local/bin htmltest
+        htmltest --version
+
+    - name: Run htmltest
+      shell: bash
+      env:
+        HTMLTEST_CONFIG: ${{ inputs.config }}
+        HTMLTEST_PATH: ${{ inputs.path }}
+      run: |
+        if [ -n "$HTMLTEST_CONFIG" ]; then
+          htmltest --conf "$HTMLTEST_CONFIG" "$HTMLTEST_PATH"
+        else
+          htmltest "$HTMLTEST_PATH"
+        fi

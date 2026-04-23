@@ -56,7 +56,7 @@ jobs:
 
       - if: ${{ steps.changes.outputs.no_changes != 'true' }}
         name: Found Change Comment
-        uses: emmahsax/github-actions/comment-pull-request@update
+        uses: emmahsax/github-actions/comment-pull-request@main
         with:
           comment_tag: changes
           message: |
@@ -69,7 +69,7 @@ jobs:
 
       - if: ${{ steps.changes.outputs.no_changes == 'true' }}
         name: Missing Change Comment
-        uses: emmahsax/github-actions/comment-pull-request@update
+        uses: emmahsax/github-actions/comment-pull-request@main
         with:
           comment_tag: changes
           message: |

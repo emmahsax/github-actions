@@ -82,14 +82,14 @@ jobs:
       - id: job_log_url
         if: github.event_name == 'pull_request' && inputs.notify_pr == 'true'
         name: Get Job Log URL
-        uses: emmahsax/github-actions/get-job-id@update
+        uses: emmahsax/github-actions/get-job-id@main
         with:
           github_token: ${{ secrets.github_token }}
           job_name: ${{ inputs.caller_job_name }} / ${{ github.job }}
 
       - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.status == 'fail'
         name: Pull Request Failure Comment
-        uses: emmahsax/github-actions/comment-pull-request@update
+        uses: emmahsax/github-actions/comment-pull-request@main
         with:
           comment_tag: ${{ inputs.caller_job_name }}
           message: |
@@ -97,7 +97,7 @@ jobs:
 
       - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.status == 'success'
         name: Pull Request Success Comment
-        uses: emmahsax/github-actions/comment-pull-request@update
+        uses: emmahsax/github-actions/comment-pull-request@main
         with:
           comment_tag: ${{ inputs.caller_job_name }}
           message: |

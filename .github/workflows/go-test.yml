@@ -53,10 +53,10 @@ jobs:
         run: ${{ inputs.vet_command }}
 
       - name: Go FMT
-        uses: Jerome1337/gofmt-action@v1.0.5
+        uses: emmahsax/github-actions/gofmt-check@main
         with:
-          gofmt-path: ./
-          gofmt-flags: '-l -d'
+          gofmt_flags: '-l -d'
+          gofmt_path: ./
 
       - if: ${{ inputs.staticcheck }}
         name: Go Staticcheck

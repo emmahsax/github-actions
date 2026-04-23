@@ -61,7 +61,7 @@ jobs:
       - continue-on-error: ${{ inputs.notify_pr == 'true' }}
         id: htmltest
         name: Run HTML Test
-        uses: wjdp/htmltest-action@31be84a95c860a331e0cf9a99f71e3eb39d2f86b
+        uses: emmahsax/github-actions/run-htmltest@main
         with:
           path: ${{ inputs.site_artifact_path }}
           config: ${{ inputs.config_file && '.htmltest.yml' || '' }}
@@ -69,7 +69,7 @@ jobs:
       - id: job_log_url
         if: github.event_name == 'pull_request' && inputs.notify_pr == 'true'
         name: Get Job Log URL
-        uses: Tiryoh/gha-jobid-action@v1
+        uses: emmahsax/github-actions/get-job-id@main
         with:
           github_token: ${{ secrets.github_token }}
           job_name: ${{ inputs.caller_job_name }} / ${{ github.job }}

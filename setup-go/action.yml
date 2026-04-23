@@ -21,7 +21,7 @@ runs:
       run: git config --global url.https://${{ inputs.github_token }}@github.com/.insteadOf https://github.com/
 
     - name: Install Task
-      uses: arduino/setup-task@v1
+      uses: arduino/setup-task@v2
 
     - name: Install Ko
       uses: ko-build/setup-ko@v0.9

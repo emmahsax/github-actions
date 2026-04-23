@@ -6,22 +6,22 @@ inputs:
     description: A tag used to identify the comment for upsert/delete; when set, the comment becomes "sticky" (subsequent runs update it instead of creating duplicates); when not set, a new comment is created every time
     required: false
   create_if_not_exists:
-    description: Whether to create a comment if the tagged comment is not found
     default: 'true'
+    description: Whether to create a comment if the tagged comment is not found
     required: false
   file_path:
     description: Path to a file whose contents will be used as the comment body
     required: false
   github_token:
-    description: GitHub token for API access
     default: ${{ github.token }}
+    description: GitHub token for API access
     required: false
   message:
     description: Message to post on the pull request
     required: false
   mode:
-    description: Upsert, recreate, delete, or delete-on-completion
     default: upsert
+    description: Upsert, recreate, delete, or delete-on-completion
     required: false
   pr_number:
     description: Pull request number (defaults to the current PR from context)
@@ -46,7 +46,7 @@ runs:
   steps:
     - name: Post or update PR comment
       id: comment
-      uses: actions/github-script@v8
+      uses: actions/github-script@v9
       env:
         INPUT_COMMENT_TAG: ${{ inputs.comment_tag }}
         INPUT_CREATE_IF_NOT_EXISTS: ${{ inputs.create_if_not_exists }}

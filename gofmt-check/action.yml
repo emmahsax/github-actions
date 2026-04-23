@@ -20,7 +20,7 @@ runs:
         GOFMT_FLAGS: ${{ inputs.gofmt_flags }}
         GOFMT_PATH: ${{ inputs.gofmt_path }}
       run: |
-        output=$(gofmt $GOFMT_FLAGS $GOFMT_PATH)
+        output=$(gofmt $GOFMT_FLAGS $GOFMT_PATH 2>&1) || true
         if [ -n "$output" ]; then
           echo "$output"
           exit 1

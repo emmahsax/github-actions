@@ -14,6 +14,16 @@ on:
         description: The version of Go to build
         required: false
         type: number
+      install_ko:
+        default: false
+        description: Whether to install Ko or not
+        required: false
+        type: boolean
+      install_task:
+        default: true
+        description: Whether to install Task or not
+        required: false
+        type: boolean
       staticcheck:
         default: true
         description: Whether to run staticcheck or not
@@ -42,6 +52,8 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           go_version: ${{ inputs.go_version }}
+          install_ko: ${{ inputs.install_ko }}
+          install_task: ${{ inputs.install_task }}
 
       - name: Go Build
         run: ${{ inputs.build_command }}

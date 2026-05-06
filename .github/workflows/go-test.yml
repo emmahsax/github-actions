@@ -38,7 +38,7 @@ jobs:
           ref: ${{ inputs.branch }}
 
       - name: Set up Go
-        uses: emmahsax/github-actions/setup-go@main
+        uses: emmahsax/github-actions/setup-go@use_go_task
         with:
           github_token: ${{ secrets.github_token }}
           go_version: ${{ inputs.go_version }}

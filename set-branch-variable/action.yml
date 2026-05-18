@@ -10,6 +10,7 @@ runs:
   using: composite
   steps:
     - id: set_branch_variable
+      name: Set Branch Variable
       run: |
         if [[ ${{ github.ref }} == 'refs/heads'* ]]; then # This is a branch, not a pull request
           echo "branch=$(echo ${{ github.ref }} | sed -E 's|refs/[a-zA-Z]+/||')" >> $GITHUB_OUTPUT

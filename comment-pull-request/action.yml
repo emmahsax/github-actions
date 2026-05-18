@@ -44,10 +44,7 @@ outputs:
 runs:
   using: composite
   steps:
-    - name: Post or update PR comment
-      id: comment
-      uses: actions/github-script@v9
-      env:
+    - env:
         INPUT_COMMENT_TAG: ${{ inputs.comment_tag }}
         INPUT_CREATE_IF_NOT_EXISTS: ${{ inputs.create_if_not_exists }}
         INPUT_FILE_PATH: ${{ inputs.file_path }}
@@ -55,6 +52,9 @@ runs:
         INPUT_MODE: ${{ inputs.mode }}
         INPUT_PR_NUMBER: ${{ inputs.pr_number }}
         INPUT_REACTIONS: ${{ inputs.reactions }}
+      id: comment
+      name: Post or Update PR Comment
+      uses: actions/github-script@v9
       with:
         github-token: ${{ inputs.github_token }}
         script: |

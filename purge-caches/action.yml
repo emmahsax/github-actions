@@ -1,0 +1,17 @@
+name: Purge Cache
+description: Delete all GitHub Actions caches for the current repository
+
+inputs:
+  github_token:
+    default: ${{ github.token }}
+    description: Token to use for removing caches (requires actions:write permission on the workflow)
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - env:
+        GH_TOKEN: ${{ inputs.github_token }}
+      name: Delete All Caches
+      run: gh cache delete --all --repo "${{ github.repository }}" || true
+      shell: bash

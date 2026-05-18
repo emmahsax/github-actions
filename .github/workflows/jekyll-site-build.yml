@@ -28,3 +28,4 @@ jobs:
         with:
           name: public
           path: _site/
+          retention-days: 7

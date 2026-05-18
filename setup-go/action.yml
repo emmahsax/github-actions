@@ -25,8 +25,8 @@ runs:
         go-version: ${{ inputs.go_version }}
 
     - name: Configure Private Access
-      shell: bash
       run: git config --global url.https://${{ inputs.github_token }}@github.com/.insteadOf https://github.com/
+      shell: bash
 
     - if: ${{ inputs.install_task == 'true' }}
       name: Install Task

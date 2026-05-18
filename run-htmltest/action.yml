@@ -18,10 +18,9 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Install htmltest
-      shell: bash
-      env:
+    - env:
         HTMLTEST_VERSION: ${{ inputs.version }}
+      name: Install htmltest
       run: |
         if [ -z "$HTMLTEST_VERSION" ]; then
           HTMLTEST_VERSION=$(curl -sSfL "https://api.github.com/repos/wjdp/htmltest/releases/latest" \
@@ -30,15 +29,16 @@ runs:
         curl -sSfL "https://github.com/wjdp/htmltest/releases/download/v${HTMLTEST_VERSION}/htmltest_${HTMLTEST_VERSION}_linux_amd64.tar.gz" \
           | sudo tar -xz -C /usr/local/bin htmltest
         htmltest --version
-
-    - name: Run htmltest
       shell: bash
-      env:
+
+    - env:
         HTMLTEST_CONFIG: ${{ inputs.config }}
         HTMLTEST_PATH: ${{ inputs.path }}
+      name: Run htmltest
       run: |
         if [ -n "$HTMLTEST_CONFIG" ]; then
           htmltest --conf "$HTMLTEST_CONFIG" "$HTMLTEST_PATH"
         else
           htmltest "$HTMLTEST_PATH"
         fi
+      shell: bash

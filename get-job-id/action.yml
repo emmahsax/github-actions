@@ -33,15 +33,14 @@ outputs:
 runs:
   using: composite
   steps:
-    - name: Parse Job ID
-      id: parse
-      shell: bash
-      env:
+    - env:
         INPUT_GITHUB_TOKEN: ${{ inputs.github_token }}
         INPUT_JOB_NAME: ${{ inputs.job_name }}
         INPUT_PER_PAGE: ${{ inputs.per_page }}
         INPUT_REPOSITORY: ${{ inputs.repository }}
         INPUT_RUN_ID: ${{ inputs.run_id }}
+      id: parse
+      name: Parse Job ID
       run: |
         GITHUB_API="/repos/${INPUT_REPOSITORY}/actions/runs/${INPUT_RUN_ID}/jobs"
         JOBINFO="$(curl --get -Ss \
@@ -66,3 +65,4 @@ runs:
 
         echo "job_id=${JOB_ID}" >> "$GITHUB_OUTPUT"
         echo "html_url=${HTML_URL}" >> "$GITHUB_OUTPUT"
+      shell: bash

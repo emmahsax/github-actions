@@ -14,14 +14,14 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Check Go Formatting
-      shell: bash
-      env:
+    - env:
         GOFMT_FLAGS: ${{ inputs.gofmt_flags }}
         GOFMT_PATH: ${{ inputs.gofmt_path }}
+      name: Check Go formatting
       run: |
         output=$(gofmt $GOFMT_FLAGS $GOFMT_PATH 2>&1) || true
         if [ -n "$output" ]; then
           echo "$output"
           exit 1
         fi
+      shell: bash

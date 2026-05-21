@@ -1,10 +1,10 @@
 name: Get Job ID
-description: Get the current workflow run's job ID and HTML URL via the GitHub API
+description: Get the current workflow run's job ID and HTML URL via the GitHub API. Caller needs `actions: read`.
 
 inputs:
   github_token:
     default: ${{ github.token }}
-    description: GITHUB_TOKEN to use for GitHub API access
+    description: GitHub token for API access
     required: false
   job_name:
     description: Name of the job to look up

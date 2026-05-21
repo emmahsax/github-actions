@@ -1,10 +1,10 @@
 name: Purge Cache
-description: Delete all GitHub Actions caches for the current repository
+description: Delete all GitHub Actions caches for the current repository. Caller needs `actions: write`.
 
 inputs:
   github_token:
     default: ${{ github.token }}
-    description: Token to use for removing caches (requires actions:write permission on the workflow)
+    description: GitHub token for API access
     required: false
 
 runs:

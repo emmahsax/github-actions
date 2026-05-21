@@ -37,6 +37,8 @@ on:
 
 jobs:
   main:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Check Out Code

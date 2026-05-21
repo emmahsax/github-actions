@@ -42,6 +42,10 @@ on:
 
 jobs:
   main:
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: Check Out Code

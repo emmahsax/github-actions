@@ -1,5 +1,5 @@
 name: Setup Hugo (Ubuntu)
-description: Install Hugo on Ubuntu runners by downloading from GitHub releases - No caller permissions required
+description: Install Hugo on Ubuntu runners by downloading from GitHub releases - no caller permissions required
 
 inputs:
   extended:

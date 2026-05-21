@@ -1,5 +1,5 @@
 name: Comment Pull Request
-description: Post a comment on a pull request with optional sticky behavior
+description: Post a comment on a pull request with optional sticky behavior. Caller needs `pull-requests: write`.
 
 inputs:
   comment_tag:

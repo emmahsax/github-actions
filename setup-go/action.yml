@@ -1,5 +1,5 @@
 name: Setup Go
-description: Set up Go
+description: Set up Go. No caller permissions required.
 inputs:
   github_token:
     description: Token to use for updating code with formatting fixes

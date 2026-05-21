@@ -28,7 +28,7 @@ on:
         default: false
         description: Whether to notify the PR about failures/success runs
         required: false
-        type: string
+        type: boolean
       site_artifact_name:
         default: ''
         description: The name of the artifact to download
@@ -84,14 +84,14 @@ jobs:
           fi
 
       - id: job_log_url
-        if: github.event_name == 'pull_request' && inputs.notify_pr == 'true'
+        if: ${{ github.event_name == 'pull_request' && inputs.notify_pr }}
         name: Get Job Log URL
         uses: emmahsax/github-actions/get-job-id@main
         with:
           github_token: ${{ secrets.github_token }}
           job_name: ${{ inputs.caller_job_name }} / ${{ github.job }}
 
-      - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.status == 'fail'
+      - if: ${{ github.event_name == 'pull_request' && inputs.notify_pr && env.status == 'fail' }}
         name: Pull Request Failure Comment
         uses: emmahsax/github-actions/comment-pull-request@main
         with:
@@ -99,7 +99,7 @@ jobs:
           message: |
             :warning: Latest run of ${{ inputs.caller_prettified_job_name || inputs.caller_job_name }} **failed**: ${{ steps.job_log_url.outputs.html_url }}
 
-      - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.status == 'success'
+      - if: ${{ github.event_name == 'pull_request' && inputs.notify_pr && env.status == 'success' }}
         name: Pull Request Success Comment
         uses: emmahsax/github-actions/comment-pull-request@main
         with:

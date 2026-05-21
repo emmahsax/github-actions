@@ -1,5 +1,5 @@
 name: Purge Cache
-description: Delete all GitHub Actions caches for the current repository. Caller needs `actions: write`.
+description: Delete all GitHub Actions caches for the current repository - caller needs actions:write permissions
 
 inputs:
   github_token:

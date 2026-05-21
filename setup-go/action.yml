@@ -1,5 +1,5 @@
 name: Setup Go
-description: Set up Go. No caller permissions required.
+description: Set up Go - no caller permissions required
 
 inputs:
   github_token:

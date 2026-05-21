@@ -1,5 +1,5 @@
 name: Get Job ID
-description: Get the current workflow run's job ID and HTML URL via the GitHub API. Caller needs `actions: read`.
+description: Get the current workflow run's job ID and HTML URL via the GitHub API - caller needs actions:read permissions
 
 inputs:
   github_token:

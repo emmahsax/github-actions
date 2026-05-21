@@ -1,5 +1,5 @@
 name: Set Branch Variable
-description: Set the current branch as an output variable. No caller permissions required.
+description: Set the current branch as an output variable - no caller permissions required
 
 outputs:
   branch:

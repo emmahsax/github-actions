@@ -1,5 +1,5 @@
 name: Run htmltest
-description: Install and run htmltest to validate HTML links and references. No caller permissions required.
+description: Install and run htmltest to validate HTML links and references - No caller permissions required
 
 inputs:
   config:

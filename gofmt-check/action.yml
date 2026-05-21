@@ -1,5 +1,5 @@
 name: Go FMT Check
-description: Check Go code formatting using gofmt. No caller permissions required.
+description: Check Go code formatting using gofmt - No caller permissions required
 
 inputs:
   gofmt_flags:

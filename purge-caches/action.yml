@@ -4,7 +4,7 @@ description: Delete all GitHub Actions caches for the current repository. Caller
 inputs:
   github_token:
     default: ${{ github.token }}
-    description: Token to use for removing caches (requires actions:write permission on the workflow)
+    description: GitHub token for API access
     required: false
 
 runs:

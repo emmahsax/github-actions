@@ -37,6 +37,11 @@ on:
 
 jobs:
   main:
+    # Stashed here because GHA's post-step-failure evaluation of
+    # continue-on-error can't reliably read inputs.* (returns ''), but
+    # env.* is resolved at job start and stable thereafter.
+    env:
+      NOTIFY_PR: ${{ inputs.notify_pr }}
     permissions:
       actions: read
       contents: read
@@ -62,7 +67,7 @@ jobs:
           ${{ inputs.config_file }}
           EOF
 
-      - continue-on-error: ${{ inputs.notify_pr }}
+      - continue-on-error: ${{ env.NOTIFY_PR == 'true' }}
         id: htmltest
         name: Run HTML Test
         uses: emmahsax/github-actions/run-htmltest@main

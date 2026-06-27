@@ -6,6 +6,11 @@ on:
         description: Whether to move the source_static_folder/* to source_folder/*
         required: false
         type: boolean
+      source_branch:
+        default: main
+        description: The branch to check out
+        required: false
+        type: string
       source_folder:
         default: public/
         description: The folder to deploy from with a / at the end
@@ -45,7 +50,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 2147483647
-          ref: main
+          ref: ${{ inputs.source_branch }}
 
       - name: Create Source Folder
         run: mkdir ${{ inputs.source_folder }}

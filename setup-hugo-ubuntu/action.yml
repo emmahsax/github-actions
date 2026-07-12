@@ -7,7 +7,7 @@ inputs:
     description: Whether to install the Hugo extended version (supports SCSS/SASS)
     required: false
   hugo_version:
-    default: '0.145.0'
+    default: '0.164.0'
     description: The Hugo version to install (e.g. 0.145.0)
     required: false
 

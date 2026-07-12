@@ -50,7 +50,7 @@ jobs:
           ref: ${{ inputs.branch }}
 
       - name: Set up Go
-        uses: emmahsax/github-actions/setup-go@renovate/ko-build-setup-ko-0.x
+        uses: emmahsax/github-actions/setup-go@main
         with:
           github_token: ${{ secrets.github_token }}
           go_version: ${{ inputs.go_version }}

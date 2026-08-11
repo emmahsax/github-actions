@@ -9,5 +9,7 @@ on:
 jobs:
   gitleaks:
     permissions:
-      contents: read
+      contents: write
+      issues: write
+      pull-requests: write
     uses: ./.github/workflows/gitleaks.yml

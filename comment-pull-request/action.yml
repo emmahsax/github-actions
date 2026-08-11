@@ -52,6 +52,7 @@ runs:
         INPUT_MODE: ${{ inputs.mode }}
         INPUT_PR_NUMBER: ${{ inputs.pr_number }}
         INPUT_REACTIONS: ${{ inputs.reactions }}
+        NODE_OPTIONS: --use-system-ca
       id: comment
       name: Post or Update PR Comment
       uses: actions/github-script@v9

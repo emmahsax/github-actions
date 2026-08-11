@@ -34,9 +34,7 @@ on:
 jobs:
   main:
     permissions:
-      contents: write
-      issues: write
-      pull-requests: write
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Check Out Code
@@ -83,10 +81,3 @@ jobs:
         run: |
           echo "Running: ${{ env.command }}"
           docker run --rm -v $(pwd):/app -i --entrypoint /bin/bash zricethezav/gitleaks:${{ inputs.gitleaks_version }} -c "${{ env.command }}"
-
-
-      - name: Test Comment
-        uses: emmahsax/github-actions/comment-pull-request@add-use-system-ca-flag
-        with:
-          message: |
-            This is a test comment from the GitLeaks workflow.

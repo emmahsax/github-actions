@@ -76,4 +76,4 @@ jobs:
         with:
           comment_tag: changes
           message: |
-            :warning: Could not find ${{ inputs.description }} in `${{ inputs.file }}`
+            :x: Could not find ${{ inputs.description }} in `${{ inputs.file }}`

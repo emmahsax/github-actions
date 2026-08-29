@@ -89,7 +89,7 @@ jobs:
         with:
           comment_tag: ${{ inputs.caller_job_name }}
           message: |
-            :warning: Latest run of ${{ inputs.caller_prettified_job_name || inputs.caller_job_name }} **failed**: ${{ steps.job_log_url.outputs.html_url }}
+            :x: Latest run of ${{ inputs.caller_prettified_job_name || inputs.caller_job_name }} **failed**: ${{ steps.job_log_url.outputs.html_url }}
 
       - if: ${{ github.event_name == 'pull_request' && inputs.notify_pr && steps.htmltest.outcome == 'success' }}
         name: Pull Request Success Comment

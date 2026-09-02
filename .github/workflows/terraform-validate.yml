@@ -33,7 +33,7 @@ jobs:
           terraform_version: ${{ inputs.terraform_version }}
 
       - name: Terraform Format Check
-        run: terraform fmt -check -diff
+        run: terraform fmt -recursive -check -diff
         working-directory: ${{ inputs.working_directory }}
 
       - name: Terraform Init

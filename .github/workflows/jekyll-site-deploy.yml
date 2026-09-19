@@ -17,7 +17,7 @@ on:
         required: false
         type: string
       source_static_folder:
-        default: site_files/ # TODO: Change to static/
+        default: static/
         description: The location of the static files with a / at the end
         required: false
         type: string

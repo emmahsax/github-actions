@@ -50,8 +50,7 @@ jobs:
       - name: Check Out Code
         uses: actions/checkout@v7
         with:
-          # GoReleaser needs the full history and tags, and releases exactly the commit this
-          # run was dispatched on, even if main has moved on since
+          # GoReleaser needs the full history and tags, and releases exactly the commit this run was dispatched on, even if main has moved on since
           fetch-depth: ${{ inputs.use_goreleaser && '0' || '1' }}
           ref: ${{ inputs.use_goreleaser && github.sha || 'main' }}
 
@@ -63,8 +62,7 @@ jobs:
           install_ko: ${{ inputs.install_ko }}
           install_task: ${{ inputs.install_task }}
 
-      # Builds everything without publishing, so a build or config problem fails the run
-      # before the tag is pushed
+      # Builds everything without publishing, so a build or config problem fails the run before the tag is pushed
       - if: ${{ inputs.use_goreleaser }}
         name: GoReleaser Dry Run
         uses: goreleaser/goreleaser-action@v7

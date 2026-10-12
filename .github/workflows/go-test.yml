@@ -52,8 +52,7 @@ jobs:
   main:
     permissions:
       contents: read
-    # Run caller-provided commands (build_command, test_command, ...) in bash on every OS,
-    # including Windows where the default would be PowerShell
+    # Run caller-provided commands (build_command, test_command, ...) in bash on every OS, including Windows where the default would be PowerShell
     defaults:
       run:
         shell: bash
@@ -63,8 +62,7 @@ jobs:
       matrix:
         runner: ${{ fromJSON(inputs.runners) }}
     steps:
-      # Windows runners convert LF to CRLF on checkout by default, which makes gofmt
-      # report every file as unformatted
+      # Windows runners convert LF to CRLF on checkout by default, which makes gofmt report every file as unformatted
       - name: Keep LF Line Endings
         run: git config --global core.autocrlf false
 
@@ -90,7 +88,6 @@ jobs:
       - name: Go Vet
         run: ${{ inputs.vet_command }}
 
-      # gofmt and staticcheck intentionally run on every runner type
       - name: Go FMT
         uses: emmahsax/github-actions/gofmt-check@main
         with:

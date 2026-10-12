@@ -15,6 +15,11 @@ on:
         description: The version of Go to build
         required: false
         type: number
+      goreleaser_args:
+        default: release --clean
+        description: Arguments to pass to GoReleaser (only used when use_goreleaser is true)
+        required: false
+        type: string
       install_ko:
         default: false
         description: Whether to install Ko or not
@@ -31,7 +36,12 @@ on:
         type: string
       upload:
         default: false
-        description: Whether to upload assets during the release
+        description: Whether to upload assets during the release (ignored when use_goreleaser is true)
+        required: false
+        type: boolean
+      use_goreleaser:
+        default: false
+        description: Build and publish the release with GoReleaser instead of build_command, files and softprops/action-gh-release
         required: false
         type: boolean
 
@@ -44,6 +54,7 @@ jobs:
       - name: Check Out Code
         uses: actions/checkout@v7
         with:
+          fetch-depth: 0
           ref: main
 
       - name: Set up Go
@@ -54,10 +65,37 @@ jobs:
           install_ko: ${{ inputs.install_ko }}
           install_task: ${{ inputs.install_task }}
 
-      - name: Go Build
+      - if: ${{ inputs.use_goreleaser }}
+        name: Create Tag
+        env:
+          TAG_NAME: ${{ inputs.tag_name }}
+        run: |
+          if git rev-parse --quiet --verify "refs/tags/$TAG_NAME" > /dev/null; then
+            if [ "$(git rev-parse "$TAG_NAME^{commit}")" != "$(git rev-parse HEAD)" ]; then
+              echo "Tag $TAG_NAME already exists on a different commit than main" >&2
+              exit 1
+            fi
+            echo "Tag $TAG_NAME already exists on this commit"
+          else
+            git tag "$TAG_NAME"
+            git push origin "refs/tags/$TAG_NAME"
+          fi
+
+      - if: ${{ inputs.use_goreleaser }}
+        name: GoReleaser
+        uses: goreleaser/goreleaser-action@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        with:
+          args: ${{ inputs.goreleaser_args }}
+          distribution: goreleaser
+          version: ~> v2
+
+      - if: ${{ !inputs.use_goreleaser }}
+        name: Go Build
         run: ${{ inputs.build_command }}
 
-      - if: ${{ inputs.upload }}
+      - if: ${{ !inputs.use_goreleaser && inputs.upload }}
         name: GitHub Release & Upload Assets
         uses: softprops/action-gh-release@v3
         env:
@@ -70,7 +108,7 @@ jobs:
           prerelease: false
           tag_name: ${{ inputs.tag_name }}
 
-      - if: ${{ inputs.upload == false }}
+      - if: ${{ !inputs.use_goreleaser && inputs.upload == false }}
         name: GitHub Release
         uses: softprops/action-gh-release@v3
         env:

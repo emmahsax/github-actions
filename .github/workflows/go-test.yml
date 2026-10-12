@@ -24,6 +24,11 @@ on:
         description: Whether to install Task or not
         required: false
         type: boolean
+      runners:
+        default: '["ubuntu-latest"]'
+        description: JSON array of runner labels to run the job on, e.g. '["ubuntu-latest", "macos-latest", "windows-latest"]'
+        required: false
+        type: string
       staticcheck:
         default: true
         description: Whether to run staticcheck or not
@@ -42,7 +47,11 @@ jobs:
   main:
     permissions:
       contents: read
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: ${{ fromJSON(inputs.runners) }}
     steps:
       - name: Check Out Code
         uses: actions/checkout@v7

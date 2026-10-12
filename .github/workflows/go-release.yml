@@ -26,6 +26,11 @@ on:
         description: Whether to install Task or not
         required: false
         type: boolean
+      require_semantic_versioning:
+        default: true
+        description: Whether to require tag_name to start with v and be a semantic version (e.g. v1.2.3)
+        required: false
+        type: boolean
       tag_name:
         description: The name of the tag/release to use
         required: true
@@ -47,6 +52,22 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
+      # Runs first, so a bad tag name fails the run before anything is checked out, built or tagged
+      - if: ${{ inputs.require_semantic_versioning }}
+        name: Validate Tag Name
+        env:
+          TAG_NAME: ${{ inputs.tag_name }}
+        run: |
+          if [[ "$TAG_NAME" != v* ]]; then
+            echo "Tag name '$TAG_NAME' must start with v (e.g. v1.2.3). Set require_semantic_versioning to false to skip this check." >&2
+            exit 1
+          fi
+          semver='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$'
+          if [[ ! "${TAG_NAME#v}" =~ $semver ]]; then
+            echo "Tag name '$TAG_NAME' is not a semantic version (e.g. v1.2.3, see https://semver.org). Set require_semantic_versioning to false to skip this check." >&2
+            exit 1
+          fi
+
       - name: Check Out Code
         uses: actions/checkout@v7
         with:

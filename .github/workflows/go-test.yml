@@ -15,7 +15,7 @@ on:
         required: false
         type: number
       install_goreleaser:
-        default: false
+        default: true
         description: Whether to install GoReleaser or not
         required: false
         type: boolean

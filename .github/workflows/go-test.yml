@@ -14,6 +14,11 @@ on:
         description: The version of Go to build
         required: false
         type: number
+      install_goreleaser:
+        default: false
+        description: Whether to install GoReleaser or not
+        required: false
+        type: boolean
       install_ko:
         default: false
         description: Whether to install Ko or not
@@ -76,6 +81,7 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           go_version: ${{ inputs.go_version }}
+          install_goreleaser: ${{ inputs.install_goreleaser }}
           install_ko: ${{ inputs.install_ko }}
           install_task: ${{ inputs.install_task }}
 

@@ -8,6 +8,10 @@ inputs:
   go_version:
     description: The version of Go to use
     required: true
+  install_goreleaser:
+    default: 'false'
+    description: Whether to install GoReleaser or not
+    required: false
   install_ko:
     default: 'false'
     description: Whether to install Ko or not
@@ -32,6 +36,14 @@ runs:
     - if: ${{ inputs.install_task == 'true' }}
       name: Install Task
       uses: go-task/setup-task@v2
+
+    - if: ${{ inputs.install_goreleaser == 'true' }}
+      name: Install GoReleaser
+      uses: goreleaser/goreleaser-action@v7
+      with:
+        distribution: goreleaser
+        install-only: true
+        version: ~> v2
 
     - if: ${{ inputs.install_ko == 'true' }}
       name: Install Ko

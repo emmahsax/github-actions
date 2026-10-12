@@ -37,7 +37,9 @@ on:
         type: boolean
       use_goreleaser:
         default: false
-        description: Build and publish the release with GoReleaser instead of build_command, files and softprops/action-gh-release
+        description: >-
+          Build and publish the release with GoReleaser instead of build_command, files
+          and softprops/action-gh-release
         required: false
         type: boolean
 
@@ -50,7 +52,8 @@ jobs:
       - name: Check Out Code
         uses: actions/checkout@v7
         with:
-          # GoReleaser needs the full history and tags, and releases exactly the commit this run was dispatched on, even if main has moved on since
+          # GoReleaser needs the full history and tags, and releases exactly the commit this run was dispatched on,
+          # even if main has moved on since
           fetch-depth: ${{ inputs.use_goreleaser && '0' || '1' }}
           ref: ${{ inputs.use_goreleaser && github.sha || 'main' }}
 
@@ -78,7 +81,8 @@ jobs:
         run: |
           if git rev-parse --quiet --verify "refs/tags/$TAG_NAME" > /dev/null; then
             if [ "$(git rev-parse "$TAG_NAME^{commit}")" != "$(git rev-parse HEAD)" ]; then
-              echo "Tag $TAG_NAME already exists on a different commit than $(git rev-parse --short HEAD). Delete the tag (and any release for it) to release again." >&2
+              echo "Tag $TAG_NAME already exists on a different commit than $(git rev-parse --short HEAD)." \
+                "Delete the tag (and any release for it) to release again." >&2
               exit 1
             fi
             echo "Tag $TAG_NAME already exists on this commit"

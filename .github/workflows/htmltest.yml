@@ -88,13 +88,15 @@ jobs:
         uses: emmahsax/github-actions/comment-pull-request@main
         with:
           comment_tag: ${{ inputs.caller_job_name }}
-          message: |
-            :x: Latest run of ${{ inputs.caller_prettified_job_name || inputs.caller_job_name }} **failed**: ${{ steps.job_log_url.outputs.html_url }}
+          message: >-
+            :x: Latest run of ${{ inputs.caller_prettified_job_name || inputs.caller_job_name }}
+            **failed**: ${{ steps.job_log_url.outputs.html_url }}
 
       - if: ${{ github.event_name == 'pull_request' && inputs.notify_pr && steps.htmltest.outcome == 'success' }}
         name: Pull Request Success Comment
         uses: emmahsax/github-actions/comment-pull-request@main
         with:
           comment_tag: ${{ inputs.caller_job_name }}
-          message: |
-            :white_check_mark: Latest run of ${{ inputs.caller_prettified_job_name || inputs.caller_job_name }} **succeeded**: ${{ steps.job_log_url.outputs.html_url }}
+          message: >-
+            :white_check_mark: Latest run of ${{ inputs.caller_prettified_job_name || inputs.caller_job_name }}
+            **succeeded**: ${{ steps.job_log_url.outputs.html_url }}

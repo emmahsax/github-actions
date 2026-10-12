@@ -26,7 +26,8 @@ runs:
           HTMLTEST_VERSION=$(curl -sSfL "https://api.github.com/repos/wjdp/htmltest/releases/latest" \
             | python3 -c "import sys,json; print(json.load(sys.stdin)['tag_name'].lstrip('v'))")
         fi
-        curl -sSfL "https://github.com/wjdp/htmltest/releases/download/v${HTMLTEST_VERSION}/htmltest_${HTMLTEST_VERSION}_linux_amd64.tar.gz" \
+        RELEASE_URL="https://github.com/wjdp/htmltest/releases/download/v${HTMLTEST_VERSION}"
+        curl -sSfL "${RELEASE_URL}/htmltest_${HTMLTEST_VERSION}_linux_amd64.tar.gz" \
           | sudo tar -xz -C /usr/local/bin htmltest
         htmltest --version
       shell: bash

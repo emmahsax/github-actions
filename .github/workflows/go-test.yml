@@ -31,7 +31,9 @@ on:
         type: boolean
       runners:
         default: '["ubuntu-latest"]'
-        description: JSON array of runner labels to run the job on, e.g. '["ubuntu-latest", "macos-latest", "windows-latest"]'
+        description: >-
+          JSON array of runner labels to run the job on,
+          e.g. '["ubuntu-latest", "macos-latest", "windows-latest"]'
         required: false
         type: string
       staticcheck:
@@ -57,7 +59,8 @@ jobs:
   main:
     permissions:
       contents: read
-    # Run caller-provided commands (build_command, test_command, ...) in bash on every OS, including Windows where the default would be PowerShell
+    # Run caller-provided commands (build_command, test_command, ...) in bash on every OS,
+    # including Windows where the default would be PowerShell
     defaults:
       run:
         shell: bash

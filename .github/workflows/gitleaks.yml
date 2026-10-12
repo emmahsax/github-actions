@@ -23,11 +23,15 @@ on:
         type: string
       run_default_on_all_commits:
         default: true
-        description: On the default branch, whether to run GitLeaks on all git history or since a certain commit specified below
+        description: >-
+          On the default branch, whether to run GitLeaks on all git history or since a certain commit
+          specified below
         required: false
         type: boolean
       run_default_on_since_commit:
-        description: On the default branch, the commit to start running GitLeaks from (required if run_default_on_all_commits is false)
+        description: >-
+          On the default branch, the commit to start running GitLeaks from
+          (required if run_default_on_all_commits is false)
         required: false
         type: string
 
@@ -70,7 +74,8 @@ jobs:
               if [[ ${{ inputs.run_default_on_all_commits }} == true ]]; then # Running on all commits in git history
                 echo "command=${COMMAND}" >> $GITHUB_ENV
               else
-                echo "command=${COMMAND} --log-opts='${{ inputs.run_default_on_since_commit }}..${{ github.sha }}'" >> $GITHUB_ENV
+                echo "command=${COMMAND}" \
+                  "--log-opts='${{ inputs.run_default_on_since_commit }}..${{ github.sha }}'" >> $GITHUB_ENV
               fi
             fi
           else
@@ -80,4 +85,5 @@ jobs:
       - name: Run GitLeaks
         run: |
           echo "Running: ${{ env.command }}"
-          docker run --rm -v $(pwd):/app -i --entrypoint /bin/bash zricethezav/gitleaks:${{ inputs.gitleaks_version }} -c "${{ env.command }}"
+          docker run --rm -v $(pwd):/app -i --entrypoint /bin/bash \
+            zricethezav/gitleaks:${{ inputs.gitleaks_version }} -c "${{ env.command }}"

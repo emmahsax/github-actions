@@ -1,9 +1,14 @@
 name: Comment Pull Request
-description: Post a comment on a pull request with optional sticky behavior - caller needs pull-requests:write permissions; add issues:write permissions if using the reactions input
+description: >-
+  Post a comment on a pull request with optional sticky behavior - caller needs pull-requests:write permissions;
+  add issues:write permissions if using the reactions input
 
 inputs:
   comment_tag:
-    description: A tag used to identify the comment for upsert/delete; when set, the comment becomes "sticky" (subsequent runs update it instead of creating duplicates); when not set, a new comment is created every time
+    description: >-
+      A tag used to identify the comment for upsert/delete; when set, the comment becomes "sticky"
+      (subsequent runs update it instead of creating duplicates); when not set,
+      a new comment is created every time
     required: false
   create_if_not_exists:
     default: 'true'

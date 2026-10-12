@@ -34,6 +34,11 @@ on:
         description: Whether to run staticcheck or not
         required: false
         type: boolean
+      staticcheck_version:
+        default: latest
+        description: The staticcheck version to install, e.g. latest, master, or a release such as 2026.2.1
+        required: false
+        type: string
       test_command:
         default: go test -v ./...
         required: false
@@ -87,4 +92,5 @@ jobs:
         with:
           install-go: false
           cache-key: ${{ inputs.go_version }}
+          version: ${{ inputs.staticcheck_version }}
           working-directory: ./

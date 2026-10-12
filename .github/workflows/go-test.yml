@@ -77,7 +77,7 @@ jobs:
           ref: ${{ inputs.branch }}
 
       - name: Set up Go
-        uses: emmahsax/github-actions/setup-go@main
+        uses: emmahsax/github-actions/setup-go@install-goreleaser-option
         with:
           github_token: ${{ secrets.github_token }}
           go_version: ${{ inputs.go_version }}

@@ -3,11 +3,12 @@ on:
     inputs:
       build_command:
         default: go build -v ./...
+        description: The command that builds the project (ignored when use_goreleaser is true)
         required: false
         type: string
       files:
         default: ""
-        description: A newline-delimited glob of paths to assets to upload
+        description: A newline-delimited glob of paths to assets to upload (ignored when use_goreleaser is true)
         required: false
         type: string
       go_version:
@@ -31,7 +32,12 @@ on:
         type: string
       upload:
         default: false
-        description: Whether to upload assets during the release
+        description: Whether to upload assets during the release (ignored when use_goreleaser is true)
+        required: false
+        type: boolean
+      use_goreleaser:
+        default: false
+        description: Build and publish the release with GoReleaser instead of build_command, files and softprops/action-gh-release
         required: false
         type: boolean
 
@@ -44,7 +50,9 @@ jobs:
       - name: Check Out Code
         uses: actions/checkout@v7
         with:
-          ref: main
+          # GoReleaser needs the full history and tags, and releases exactly the commit this run was dispatched on, even if main has moved on since
+          fetch-depth: ${{ inputs.use_goreleaser && '0' || '1' }}
+          ref: ${{ inputs.use_goreleaser && github.sha || 'main' }}
 
       - name: Set up Go
         uses: emmahsax/github-actions/setup-go@main
@@ -54,10 +62,46 @@ jobs:
           install_ko: ${{ inputs.install_ko }}
           install_task: ${{ inputs.install_task }}
 
-      - name: Go Build
+      # Builds everything without publishing, so a build or config problem fails the run before the tag is pushed
+      - if: ${{ inputs.use_goreleaser }}
+        name: GoReleaser Dry Run
+        uses: goreleaser/goreleaser-action@v7
+        with:
+          args: release --clean --skip=publish --snapshot
+          distribution: goreleaser
+          version: ~> v2
+
+      - if: ${{ inputs.use_goreleaser }}
+        name: Create Tag
+        env:
+          TAG_NAME: ${{ inputs.tag_name }}
+        run: |
+          if git rev-parse --quiet --verify "refs/tags/$TAG_NAME" > /dev/null; then
+            if [ "$(git rev-parse "$TAG_NAME^{commit}")" != "$(git rev-parse HEAD)" ]; then
+              echo "Tag $TAG_NAME already exists on a different commit than $(git rev-parse --short HEAD). Delete the tag (and any release for it) to release again." >&2
+              exit 1
+            fi
+            echo "Tag $TAG_NAME already exists on this commit"
+          else
+            git tag "$TAG_NAME"
+            git push origin "refs/tags/$TAG_NAME"
+          fi
+
+      - if: ${{ inputs.use_goreleaser }}
+        name: GoReleaser
+        uses: goreleaser/goreleaser-action@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        with:
+          args: release --clean
+          distribution: goreleaser
+          version: ~> v2
+
+      - if: ${{ !inputs.use_goreleaser }}
+        name: Go Build
         run: ${{ inputs.build_command }}
 
-      - if: ${{ inputs.upload }}
+      - if: ${{ !inputs.use_goreleaser && inputs.upload }}
         name: GitHub Release & Upload Assets
         uses: softprops/action-gh-release@v3
         env:
@@ -70,7 +114,7 @@ jobs:
           prerelease: false
           tag_name: ${{ inputs.tag_name }}
 
-      - if: ${{ inputs.upload == false }}
+      - if: ${{ !inputs.use_goreleaser && inputs.upload == false }}
         name: GitHub Release
         uses: softprops/action-gh-release@v3
         env:
